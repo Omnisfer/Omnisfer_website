@@ -46,8 +46,8 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.7s ease;
-  filter: grayScale(var(--j));
-  filter: grayScale(1);
+  /* filter: grayScale(var(--j));
+  filter: grayScale(1); */
 }
 
 .home-product-card:hover .home-product-image {
