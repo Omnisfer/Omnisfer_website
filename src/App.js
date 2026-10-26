@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import HomePage from './pages/OmnisferHomePage';
-import Old from './pages/OldPage';
-import ARCPage from './pages/OmnisferARCPage';
+import ARCPage from './pages/Test';
 import BuildPage from './pages/BuildPage';
+import NotFoundPage from './pages/NotFoundPage';
+import CustomCursor from './components/Common/CustomCursor';
 import './App.css';
 
 document.addEventListener('mousemove', (e) => {
@@ -30,18 +31,23 @@ function App() {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  if (route === '/ARC') {
-    return <ARCPage />;
-  }
+  let page;
   if (route === '/new') {
-    return <HomePage />;
-  }
-  if (route === '/old') {
-    return <Old />;
+    page = <HomePage />;
+  } else if (route === '/ARC') {
+    page = <ARCPage />;
+  } else if (route === '/') {
+    page = <BuildPage />;
+  } else {
+    page = <NotFoundPage />;
   }
 
-  return <BuildPage />;
-
+  return (
+    <>
+      <CustomCursor />
+      {page}
+    </>
+  );
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import './HomeContact.css';
-import { Email, Send } from '@mui/icons-material';
+import { Send } from '@mui/icons-material';
 
 export default function HomeContact() {
   return (
@@ -20,12 +20,11 @@ export default function HomeContact() {
                 together.
               </p>
             </div>
-
             <form className="home-contact-form" onSubmit={(e) => e.preventDefault()}>
-              <Email sx={{ fontSize: 20, marginRight: '8px', color: 'var(--home-element)' }} />
+              {/* <Email sx={{ fontSize: 20, marginRight: '8px', color: 'var(--home-element)' }} /> */}
               <input type="email" placeholder="Your email" aria-label="Your email" />
-              <button className="home-btn home-btn-solid" type="submit">
-                <Send sx={{ fontSize: 18, marginRight: '6px' }} />
+              <button className="home-btn home-btn-solid" type="submit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                <Send sx={{ fontSize: 18 }} />
                 Contact Cue Bot
               </button>
             </form>

@@ -1,15 +1,15 @@
 import './HomeHero.css';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import robotVideo from '../assets/Omnisfer/output.webm';
-import robotVideoIOS from '../assets/Omnisfer/output.mov';
-import robotReverseVideo from '../assets/Omnisfer/output_r.webm';
-import robotReverseVideoIOS from '../assets/Omnisfer/output_r.mov';
+import robotVideo from '../../assets/Omnisfer/output.webm';
+import robotVideoIOS from '../../assets/Omnisfer/output.mov';
+import robotReverseVideo from '../../assets/Omnisfer/output_r.webm';
+import robotReverseVideoIOS from '../../assets/Omnisfer/output_r.mov';
 
 const isIOSDevice = typeof navigator !== 'undefined'
   && (/iPad|iPhone|iPod/.test(navigator.userAgent)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
 
-const logoContext = require.context('../assets/carrousel', false, /\.(png|jpe?g|svg|webp)$/i);
+const logoContext = require.context('../../assets/carrousel', false, /\.(png|jpe?g|svg|webp)$/i);
 
 const logoEntries = logoContext.keys().sort().map((logoPath) => ({
   src: logoContext(logoPath),
@@ -105,20 +105,23 @@ export default function HomeHero() {
       return;
     }
 
+    setIsReverseVisible(true);
     playbackModeRef.current = 'reverse';
     videoPositionRef.current = 'reverse';
-    reverseVideo.currentTime = 0;
-    setIsReverseVisible(true);
 
-    const playPromise = reverseVideo.play();
+    setTimeout(() => {
+      reverseVideo.currentTime = 0;
 
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(() => {
-        playbackModeRef.current = 'idle';
-        videoPositionRef.current = 'end';
-        setIsReverseVisible(false);
-      });
-    }
+      const playPromise = reverseVideo.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          playbackModeRef.current = 'idle';
+          videoPositionRef.current = 'end';
+          setIsReverseVisible(false);
+        });
+      }
+    }, 50);
   };
 
   const startForwardPlayback = () => {
@@ -128,16 +131,16 @@ export default function HomeHero() {
       return;
     }
 
-    playbackModeRef.current = 'forward';
-    videoPositionRef.current = 'forward';
-    setIsReverseVisible(false);
-
-    video.currentTime = 0;
+    video.currentTime = 0.001;
 
     const playPromise = video.play();
 
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(() => {
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise.then(() => {
+        playbackModeRef.current = 'forward';
+        videoPositionRef.current = 'forward';
+        setIsReverseVisible(false);
+      }).catch(() => {
         videoPositionRef.current = 'start';
         playbackModeRef.current = 'idle';
       });
@@ -145,51 +148,53 @@ export default function HomeHero() {
   };
 
   useEffect(() => {
-  const video = videoRef.current;
-  const reverseVideo = reverseVideoRef.current; 
+    const video = videoRef.current;
+    const reverseVideo = reverseVideoRef.current; 
 
-  if (!video) {
-    return undefined;
-  }
-
-  const handleLoadedMetadata = () => {
-    video.currentTime = 0;
-    videoPositionRef.current = 'start';
-  };
-
-  const handleEnded = () => {
-    if (playbackModeRef.current !== 'forward') {
-      return;
+    if (!video) {
+      return undefined;
     }
 
-    videoPositionRef.current = 'end';
-    playbackModeRef.current = 'idle';
-  };
-
-  const handleReverseEnded = () => {
-    if (playbackModeRef.current !== 'reverse') {
-      return;
-    }
-
+    video.load();
     if (reverseVideo) {
-      reverseVideo.pause();
+      reverseVideo.load();
     }
-    videoPositionRef.current = 'start';
-    playbackModeRef.current = 'idle';
-  };
 
-  video.addEventListener('loadedmetadata', handleLoadedMetadata);
-  video.addEventListener('ended', handleEnded);
-  
-  reverseVideo?.addEventListener('ended', handleReverseEnded);
+    const handleLoadedMetadata = () => {
+      video.currentTime = 0.001; 
+      videoPositionRef.current = 'start';
+    };
 
-  return () => {
-    video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    video.removeEventListener('ended', handleEnded);
-    
-    reverseVideo?.removeEventListener('ended', handleReverseEnded);
-  };
-}, []);
+    const handleEnded = () => {
+      if (playbackModeRef.current !== 'forward') {
+        return;
+      }
+      videoPositionRef.current = 'end';
+      playbackModeRef.current = 'idle';
+    };
+
+    const handleReverseEnded = () => {
+      if (playbackModeRef.current !== 'reverse') {
+        return;
+      }
+      if (reverseVideo) {
+        reverseVideo.pause();
+      }
+      videoPositionRef.current = 'start';
+      video.currentTime = 0.001; 
+      playbackModeRef.current = 'idle';
+    };
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('ended', handleEnded);
+    reverseVideo?.addEventListener('ended', handleReverseEnded);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('ended', handleEnded);
+      reverseVideo?.removeEventListener('ended', handleReverseEnded);
+    };
+  }, []);
 
   const handlePrimaryClick = (event) => {
     event.preventDefault();
@@ -224,7 +229,7 @@ export default function HomeHero() {
 
       <div className="homehero-container homehero-grid">
         <div className="homehero-copy">
-          <p className="homehero-kicker">Engineered Motion</p>
+          <p className="homehero-kicker">Engineered motors</p>
 
           <h1 className="homehero-title">
             MOTION.

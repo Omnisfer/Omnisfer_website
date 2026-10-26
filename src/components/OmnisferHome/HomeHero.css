@@ -1,3 +1,19 @@
+html, body {
+  background-color: var(--home-bg); /* Applique ton gris foncé Omnisfer tout au fond */
+  margin: 0;
+  padding: 0;
+}
+
+.home-page {
+  /* Remplace min-height: 100vh; par : */
+  min-height: 100dvh; 
+  background: var(--home-bg);
+  color: var(--home-text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
 /* .homehero-section { */
 .homehero-section {
   min-height: 100vh;
@@ -13,11 +29,12 @@
   --homehero-soft: rgba(255, 255, 255, 0.4);
   --homehero-border: rgba(255, 255, 255, 0.12);
   /* background-image: linear-gradient(rgba(0, 0, 0, 0.178), rgba(0, 0, 0, 0.13)),url('../assets/Omnisfer/homescreen_light_v2_5_v.png'); */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.078), rgba(0, 0, 0, 0.03)),url('../assets/Omnisfer/homepage_ring_wall_v2.png');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.078), rgba(0, 0, 0, 0.03)),url('../../assets/Omnisfer/homepage_ring_wall_v2.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: right center;
 }
+
 
 .homehero-section::before {
   content: '';
@@ -52,6 +69,8 @@
 }
 
 .homehero-background-video--hidden {
+  opacity: 0;
+  pointer-events: none;
   visibility: hidden;
 }
 
@@ -140,6 +159,7 @@
 .homehero-btn-secondary {
   background: transparent;
   color: #fff;
+  text-decoration: none;
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -307,7 +327,7 @@
   }
 
   .homehero-section {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.178), rgba(0, 0, 0, 0.274)),url('../assets/Omnisfer/homepage_ring_wall_m.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.178), rgba(0, 0, 0, 0.274)),url('../../assets/Omnisfer/homepage_ring_wall_m.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: right center;
